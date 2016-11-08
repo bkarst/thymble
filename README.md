@@ -1,8 +1,8 @@
 # Thymble
 
-Visit [thimble.org](http://www.thimble.org/) for a working demo.
-
 Thimble is an Ruby on Rails 5 community-based news platform platform. Much like Reddit or Hacker News, users are identified by peudonyms and all content posted user generated. 
+
+Visit [thimble.org](http://www.thimble.org/) for a working demo.
 
 Google, Reddit, Snapchat, Facebook, Twitter, and Reddit have an incredible amount of power to put whatever they want in front of your eyeballs and shut you up when it's in their best interest. This has been especially evident in the 2016 presidential election. 
 
@@ -15,3 +15,7 @@ Since anyone can fork this repository to deploy their own news community site, T
 - Speed/Performance 
 - Personal/Custom Feed of Stories
 - UX
+
+### License
+
+Thymble is released under the [MIT License](https://opensource.org/licenses/MIT).
