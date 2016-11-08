@@ -1,0 +1,89 @@
+%tr
+  %td{:style => 'padding-left:10px;'}
+    %table.itemlist{:border => "0", :cellpadding => "0", :cellspacing => "0"}      
+      - if @posts
+        - @posts.each_with_index do |post, idx|
+          %tr#12303075.athing{"post-id" => post.id.to_s}
+            %td.title{:align => "right", :valign => "top"}
+              %span.rank 
+                ="#{@starting_index + idx}. "
+            %td.votelinks{:valign => "top", :style => 'width:15px;padding:0px 3px;'}            
+              - if post.user == current_user
+                %div{:class => 'submitted-asterik'}
+                  * 
+              - else
+                - if current_user && current_user.upvoted_posts[post.id.to_s].present?
+                  %center{:class => 'upvote-post', "data-id" =>  post.id.to_s, :style => 'visibility:hidden;'}
+                    %a
+                      .votearrow{:title => "upvote", "data-id" =>  post.id.to_s}
+                - else
+                  %center{:class => 'upvote-post', "data-id" =>  post.id.to_s}
+                    %a
+                      .votearrow{:title => "upvote", "data-id" =>  post.id.to_s}              
+            %td.title
+              %a.storylink{:href => post.link}
+                =post.title
+              %span.sitebit.comhead
+                - if post.domain.present?
+                  (
+                  %a{:href => root_path(from: post.domain)}>
+                    %span.sitestr 
+                      =post.domain
+                  )
+            %tr{"post-id" => post.id.to_s}
+              %td{:colspan => "2"}
+              %td.subtext
+                %span#score_12303075.score 
+                  ="#{post.points} points"
+                by
+                %a.hnuser{:href => show_user_path(post.user.username)} 
+                  =post.user.username
+                %span.age
+                  %a{:href => post_path(post.url_title)} 
+                    =time_ago_in_words(post.created_at) + " ago"
+                %span#unv_12303075
+                  - if current_user.present?
+                    - if current_user.upvoted_posts[post.id.to_s]
+                      %span{:class => 'unupvote-post', "data-id" =>  post.id.to_s} 
+                        |
+                        %a{"data-id" =>  post.id.to_s}
+                          unvote
+                    - else
+                      %span{:class => 'unupvote-post', "data-id" =>  post.id.to_s, :style => 'display:none;'}
+                        |
+                        %a{"data-id" =>  post.id.to_s}
+                          unvote
+                    |
+                    - if current_user.flagged_posts[post.id.to_s]
+                      %a{:class => 'unflag-post', "data-id" =>  post.id.to_s} unflag
+                    - else
+                      %a{:class => 'flag-post', "data-id" =>  post.id.to_s} flag
+                    |
+                    - if current_user.saved_posts[post.id.to_s]
+                      %a{:class => 'unfavorite-post', "data-id" =>  post.id.to_s} unfavorite
+                    - else
+                      %a{:class => 'favorite-post', "data-id" =>  post.id.to_s} favorite
+                  - else
+                    |
+                    %a{:href => signup_path} flag
+                    |
+                    %a{:href => signup_path} favorite              
+                |
+                =link_to comment_display_string(post), post_path(post.url_title)
+                - if permission_to_edit(post)
+                  |
+                  =link_to "edit", edit_post_path(post.id.to_s)
+                - if permission_to_remove(post)
+                  |
+                  %a{:class => 'remove-post', "data-id" =>  post.id.to_s} remove
+            %tr.spacer{:style => "height:5px", "post-id" => post.id.to_s}
+        %tr.spacer{:style => "height:5px", }
+        %tr.morespace{:style => "height:10px"}
+        - if @display_more
+          %tr
+            %td{:colspan => "2"}
+            %td.title
+              %a.morelink{:href => "/?#{@paging_string}", :rel => "nofollow"} More          
+%tr
+  %td
+    =image_tag("s.gif", :style => "height:10;width:0")

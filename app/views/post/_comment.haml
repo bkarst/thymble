@@ -1,0 +1,80 @@
+%tr.expand-comment{'data-id' => comment.id.to_s}
+  %td
+    %table{:border => "0"}
+      %tr
+        %td.ind
+          =image_tag("s.gif", :style => "height:1;width:#{comment.nesting * 20 + 14};")  
+        %td
+        %td.comhead
+          %a{'data-id' => comment.id.to_s,}
+            [+] show comment
+%tr{'comment-id' => comment.id.to_s }
+  %td
+    %table{:border => "0"}
+      %tr
+        %td.ind
+          =image_tag("s.gif", :style => "height:1;width:#{comment.nesting * 20};")
+        %td.votelinks{:valign => "top"}
+          - if current_user && comment.user == current_user
+            %center
+              %div{:class => 'submitted-asterik'}
+                * 
+          - else
+            - if current_user && current_user.upvoted_comments[comment.id.to_s].present?
+              %center{:class => 'upvote-comment', "data-id" =>  comment.id.to_s, :style => 'visibility:hidden;'}
+                %a
+                  .votearrow{:title => "upvote", "data-id" =>  comment.id.to_s}
+            - else
+              %center{:class => 'upvote-comment', "data-id" =>  comment.id.to_s}
+                %a
+                  .votearrow{:title => "upvote", "data-id" =>  comment.id.to_s}          
+        %td.default
+          %div{:style => "margin-top:2px; margin-bottom:-10px;"}
+            %span.collapse-comment{"data-id" =>  comment.id.to_s}
+              [-]
+            %span.comhead
+              %a.hnuser{:href => show_user_path(comment.user.username)}
+                =comment.user.username
+              %span.age
+                %span
+                  ="#{comment.points} points " + time_ago_in_words(comment.created_at) + " ago"
+                - if current_user && current_user.upvoted_comments[comment.id.to_s].present?
+                  %span{:class => 'unvote-comment', "data-id" =>  comment.id.to_s}
+                    |
+                    %a{"data-id" =>  comment.id.to_s}
+                      unvote [-]
+                - else
+                  %span{:class => 'unvote-comment', "data-id" =>  comment.id.to_s, :style => 'display:none;'}
+                    |
+                    %a{"data-id" =>  comment.id.to_s}
+                      unvote [-]
+              - if permission_to_edit(comment)
+                |
+                =link_to "edit", edit_comment_path(comment.id.to_s)
+              - if permission_to_remove(comment)
+                |
+                %a{:class => 'remove-comment', "data-id" =>  comment.id.to_s} remove
+              - if render_post
+                |
+                %a{:href => post_path(comment.post.url_title)}
+                  ="on #{comment.post.title}"
+              %span#unv_12302402
+              %span.par
+              %a.togg{:href => "javascript:void(0)", :n => "8", :onclick => "return toggle(12302402)"}
+              %span.storyon
+          %br/
+          %span.comment
+            %span.c00
+              =comment.comment_text
+              .reply
+                %p
+                  %font
+                    %u
+                      %a{:href => comment_path(comment.id.to_s)} reply
+%tr
+  %td{:class => 'replies', 'data-id' => comment.id.to_s}
+    %table
+      - comment.replies_obj.each do |reply|
+        %tr
+        %td
+          =render 'post/comment',:comment => reply, :nesting => 100, :render_post => render_post

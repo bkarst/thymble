@@ -1,0 +1,86 @@
+!!!
+%html{:op => "reply"}
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %meta{:content => "origin", :name => "referrer"}/
+    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/    
+    =favicon_link_tag 'favicon-16x16.png', rel: 'apple-touch-icon', type: 'image/png'    
+    =favicon_link_tag 'favicon-16x16.png', type: 'image/png'    
+    = csrf_meta_tags
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    %title Add Comment | #{Constants::APP_NAME}
+  %body
+    %center
+      %table#hnmain{:bgcolor => "#f6f6ef", :border => "0", :cellpadding => "0", :cellspacing => "0", :width => "85%"}
+        %tr
+          %td{:class => "header-footer-td"}
+            %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :style => "padding:2px", :width => "100%"}
+              %tr
+                %td{:class => 'logo-td'}
+                  %a{:href => "/"}
+                    %img{:src => "/assets/logo.png", :class => 'logo-img'}
+                %td{:style => "line-height:12pt; height:10px;padding-left:6px;"}
+                  %span.pagetop
+                    %b Add Comment
+        %tr{:style => "height:10px"}
+        %tr
+          %td
+            %table{:border => "0"}
+              %tr#12312396.athing
+                %td.ind
+                %td.votelinks{:valign => "top"}
+                  - if current_user && @comment.user == current_user
+                    %center
+                      %div{:class => 'submitted-asterik'}
+                        * 
+                  - else
+                    - if current_user && current_user.upvoted_comments[@comment.id.to_s].present?
+                      %center{:class => 'upvote-comment', "data-id" =>  @comment.id.to_s, :style => 'visibility:hidden;'}
+                        %a
+                          .votearrow{:title => "upvote", "data-id" =>  @comment.id.to_s}
+                    - else
+                      %center{:class => 'upvote-comment', "data-id" =>  @comment.id.to_s}
+                        %a
+                          .votearrow{:title => "upvote", "data-id" =>  @comment.id.to_s}
+                %td.default
+                  %div{:style => "margin-top:2px; margin-bottom:-10px;"}
+                    %span.comhead
+                      %a.hnuser{:href => show_user_path(@comment.user.username)} 
+                        =@comment.user.username
+                      %span.age
+                        %a{:href => comment_path(@comment.id.to_s)}
+                          =time_ago_in_words(@comment.created_at) + " ago"
+                        - if current_user && current_user.upvoted_comments[@comment.id.to_s].present?
+                          %span{:class => 'unvote-comment', "data-id" =>  @comment.id.to_s}
+                            |
+                            %a{"data-id" =>  @comment.id.to_s}
+                              unvote [-]
+                        - else
+                          %span{:class => 'unvote-comment', "data-id" =>  @comment.id.to_s, :style => 'display:none;'}
+                            |
+                            %a{"data-id" =>  @comment.id.to_s}
+                              unvote [-]
+                      %span.par
+                        |
+                        %a{:href => comment_parent_path(@comment.id.to_s)} 
+                          parent
+                      %a.togg{:href => "javascript:void(0)", :n => "3", :onclick => "return toggle(12312396)"}
+                      %span.storyon
+                        | on:
+                        %a{:href => post_path(@comment.post.url_title)}
+                          =@comment.post.title
+                  %br/
+                  %span.comment
+                    %span.c00
+                      =@comment.comment_text
+                      .reply
+              %tr{:style => "height:10px"}
+              %tr
+                %td{:colspan => "2"}
+                %td
+                  =form_tag(create_comment_path(:post_id => @post.id.to_s, :comment_id => @comment.id.to_s), method: "post") do            
+                    %textarea{:cols => "60", :name => "comment[comment_text]", :rows => "6"}
+                    %br/
+                    %br/
+                    %input{:type => "submit", :value => "reply"}/

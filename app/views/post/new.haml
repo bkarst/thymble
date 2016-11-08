@@ -1,0 +1,41 @@
+%tr  
+  %td{:style => 'padding:10px;padding-left:40px;color:#000000;'}
+    -if flash[:error_message].present?
+      =flash[:error_message]
+%tr
+  %td
+    =form_tag(create_post_path, method: "post") do
+      %input{:name => "fnid", :type => "hidden", :value => "w5Onnr9BOELvgYSIuw9YOf"}/
+      %input{:name => "fnop", :type => "hidden", :value => "submit-page"}/
+      %table{:border => "0"}
+        %tr
+          %td title
+          %td
+            %input{:name => "post[title]", :size => "50", :type => "text", :value => ""}/
+        %tr
+          %td url
+          %td
+            %input{:name => "post[url]", :size => "50", :type => "text", :value => ""}/
+        %tr
+          %td
+          %td
+            %b or
+        %tr
+          %td text
+          %td
+            %textarea{:cols => "49", :name => "post[text]", :rows => "4"}
+        %tr
+          %td
+          %td
+        %tr
+          %td
+          %td
+            %input{:type => "submit", :value => "submit"}/
+        %tr{:style => "height:20px"}
+        %tr
+          %td
+          %td
+            Leave url blank to submit a question for discussion. If there
+            is no url, the text (if any) will appear at the top of the
+            thread.
+            %br/

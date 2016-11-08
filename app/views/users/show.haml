@@ -1,0 +1,35 @@
+%tr
+  %td
+    %table{:border => "0"}
+      %tr
+        %td{:valign => "top"} user:
+        %td
+          %a.hnuser
+            =@user.username
+      %tr
+        %td{:valign => "top"} created:
+        %td
+          =time_ago_in_words(@user.created_at) + " ago"
+      %tr
+        %td{:valign => "top"} karma:
+        %td
+          =@user.karma
+      %tr
+        %td{:valign => "top"} about:
+        %td
+          =@user.about
+      %tr
+        %td
+        %td
+          %a{:href => root_path(:by => @user.username)}
+            %u stories
+      %tr
+        %td
+        %td
+          %a{:href => comments_path(:by => @user.username )}
+            %u comments
+      %tr
+        %td
+        %td
+          %a{:href => root_path(:user_favorited => @user.username)}
+            %u favorites

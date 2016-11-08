@@ -1,0 +1,60 @@
+%tr
+  %td
+    =form_tag(update_user_path, method: "put") do    
+      %table{:border => "0"}
+        %tr
+          %td{:valign => "top"} user:
+          %td
+            %a.hnuser{:href => "user?id=benkarst"}
+              =current_user.username
+        %tr
+          %td{:valign => "top"} created:
+          %td
+            =time_ago_in_words(current_user.created_at) + " ago"
+        %tr
+          %td{:valign => "top"} karma:
+          %td
+            =current_user.karma
+        %tr
+          %td{:valign => "top"} about:
+          %td
+            %textarea{:cols => "60", :name => "about", :rows => "5", :wrap => "virtual"}              
+              =current_user.about
+        %tr
+          %td{:valign => "top"} email:
+          %td
+            %input{:name => "email", :size => "60", :type => "text", :value => current_user.email}/        
+        %tr
+          %td
+          %td
+            %a{:href => forgot_path }
+              %u change password
+        %tr
+          %td
+          %td
+            %a{:href => root_path(:submitted => true)}
+              %u stories
+        %tr
+          %td
+          %td
+            %a{:href => comments_path}
+              %u comments
+        %tr
+          %td
+          %td
+            %a{:href => root_path(:my_upvoted => true)}
+              %u upvoted stories
+            \/
+            %a{:href => comments_path(:upvoted => true)}
+              %u upvoted comments
+             
+            %span{:style => "font-style:italic"} (private)
+        %tr
+          %td
+          %td
+            %a{:href => root_path(:favorited => true)}
+              %u favorited stories
+            \/
+            %span{:style => "font-style:italic"} (shared)
+      %br/
+      %input{:type => "submit", :value => "update"}/

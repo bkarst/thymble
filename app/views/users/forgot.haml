@@ -1,0 +1,15 @@
+%tr
+  %td
+    Reset your password
+    %br/
+    %br/
+%tr
+  %td
+    =form_tag(reset_password_path, method: "post") do
+      %input{:name => "fnid", :type => "hidden", :value => "TDisGG7OEMNXuFfxkcngst"}/
+      = succeed "username:" do
+        %input{:name => "fnop", :type => "hidden", :value => "forgot-password"}/
+      %input{:name => "s", :size => "20", :type => "text"}/
+      %br/
+      %br/
+      %input{:type => "submit", :value => "Send reset email"}/

@@ -1,0 +1,54 @@
+%tr
+  %td
+    %table{:border => "0"}
+      %tbody
+        %tr#12337990.athing
+          %td.ind
+          %td.votelinks{:valign => "top"}
+            %center
+              %font{:color => "#ff6600"} *
+              %br/
+              =image_tag("s.gif", :style => "height:10;width:0")
+          %td.default
+            %div{:style => "margin-top:2px; margin-bottom:-10px;"}
+              %span.comhead
+                %span#score_12337990.score
+                  =@comment.points
+                by
+                %a.hnuser{:href => root_path(:by => @comment.user.username)}
+                  %font{:color => "#3c963c"}
+                    =@comment.user.username
+                %span.age
+                  =time_ago_in_words(@comment.created_at) + " ago"
+                %span#unv_12337990
+                %span.par
+                  |
+                  %a{:href => comment_parent_path(@comment.id.to_s)} 
+                    parent
+                - if permission_to_remove(@comment)
+                  |
+                  %a{:class => 'remove-comment', "data-id" =>  @comment.id.to_s} delete
+                %span.storyon
+                  | on:
+                  %a{:href => post_path(@comment.post.url_title)}
+                    =@comment.post.title
+            %br/
+            %span.comment
+              %span.c00
+                =@comment.comment_text
+                %span
+                .reply
+    %br/
+    =form_tag(update_comment_path(@comment.id.to_s), method: "put") do      
+      %table{:border => "0"}
+        %tbody
+          %tr
+            %td{:valign => "top"} text:
+            %td
+              %textarea{:cols => "60", :name => "comment_text", :rows => "5", :wrap => "virtual"}
+                =@comment.comment_text
+              %font{:size => "-2"}
+                %a{:href => "formatdoc", :tabindex => "-1"}
+                  %font{:color => "#afafaf"} help
+      %br/
+      %input{:type => "submit", :value => "update"}/

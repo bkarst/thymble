@@ -1,0 +1,93 @@
+%html{:op => "news"}
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %meta{:content => "origin", :name => "referrer"}/
+    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/    
+    =favicon_link_tag 'favicon-16x16.png', rel: 'apple-touch-icon', type: 'image/png'    
+    =favicon_link_tag 'favicon-16x16.png', type: 'image/png'
+    %title 
+      =get_title
+    =csrf_meta_tags
+    =stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+    =javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    %meta{:content => get_meta_url, :property => "og:url"}/
+    %meta{:content => image_url("meta-logo.png"), :property => "og:image"}
+    %meta{:content => get_meta_title, :property => "og:title"}
+    %meta{:content => get_site_name, :property => "og:site_name"}
+    %meta{:content => get_meta_description, :property => "og:description"}
+    %meta{:content => get_meta_description, :name => "description"}
+    %meta{:content => get_meta_keywords, :name => "keywords"}
+    %link{:href => image_url("meta-logo-96.png"), :rel => "icon", :sizes => "32x32 96x96", :type => "image/png"}
+    %link{:href => image_url("meta-logo-32.png"), :rel => "apple-touch-icon-precomposed", :sizes => "32x32", :type => "image/png"}
+    %meta{:content => "website", :property => "og:type"}
+    %meta{:content => "summary", :name => "twitter:card"}
+    %meta{:content => "@flickr", :name => "twitter:site"}
+    %meta{:content => get_meta_title, :name => "twitter:title"}
+    %meta{:content => get_meta_description, :name => "twitter:description"}
+    %meta{:content => image_url("meta-logo.png"), :name => "twitter:image"}
+    %meta{:content => "en_US", :property => "og:locale"}
+  %body
+    %center
+      %table#hnmain{:bgcolor => "#f6f6ef", :border => "0", :cellpadding => "0", :cellspacing => "0", :width => "85%"}
+        %tr
+          %td{:class => "header-footer-td"}
+            %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :style => "padding:4px", :width => "100%"}
+              %tr
+                %td{:class => 'logo-td'}
+                  %a{:href => "/"}
+                    =image_tag("logo.png", :class => 'logo-img')                    
+                %td{:style => "line-height:12pt; height:10px;"}
+                  %span.pagetop
+                    %b.hnname
+                      =link_to Constants::APP_NAME, root_path, :class => 'logo-link'
+                    %a{:href => root_path(:newest => true), :class => selected_tab_class('new', @selected_tab)} new
+                    - if current_user && current_user.created_at > 2.hours.ago
+                      |
+                      %a{:href => welcome_path(:threads => true), :class => selected_tab_class('welcome', @selected_tab), :style => 'color:#000000;'} welcome
+                    |
+                    %a{:href => comments_path(:threads => true), :class => selected_tab_class('threads', @selected_tab)} threads
+                    |
+                    %a{:href => root_path(:top => true), :class => selected_tab_class('top', @selected_tab)} top
+                    |
+                    %a{:href => root_path(:most_commented => true), :class => selected_tab_class('most_commented', @selected_tab) } most discussed
+                    / |
+                    / %a{:href => root_path(:ask => true), :class => selected_tab_class('ask', @selected_tab)} ask
+                    |
+                    =link_to "submit", new_post_path, :class => selected_tab_class('submit', @selected_tab)
+                %td{:style => "text-align:right;padding-right:4px;"}
+                  %span.pagetop
+                    - if current_user.present?
+                      %a{:href => edit_user_path, :class => selected_tab_class('profile', @selected_tab)}
+                        ="#{current_user.username} (#{current_user.karma})"
+                      |
+                      %a{:href => logout_path} logout
+                    - else
+                      %a{:href => signup_path} signup/login
+        %tr{:style => "height:10px"}
+        = yield
+        %tr
+          %td            
+            %table{:cellpadding => "1", :cellspacing => "0", :width => "100%"}
+              %tr
+                %td{:class => "header-footer-td"}
+            %br/
+            %center
+              %span.yclinks
+                %a{:href => guidelines_path} Guidelines
+                |
+                %a{:href => about_path} About
+                |
+                %a{:href => "mailto:#{Constants::SUPPORT_EMAIL}"} Contact
+              %br/
+              %br/
+              %form{:action => "/", :method => "get"}
+                Search:
+                %input{:autocapitalize => "off", :autocomplete => "false", :autocorrect => "off", :name => "q", :size => "17", :spellcheck => "false", :type => "text", :value => ""}
+:javascript
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-82977301-1', 'auto');
+  ga('send', 'pageview');                

@@ -1,0 +1,64 @@
+%tr{:style => "height:10px"}
+  %td
+    - if flash[:error_message]
+      %p{:style => 'font-color:#00ffff;'}
+        =flash[:error_message]
+%tr
+  %td
+    %table{:border => "0"}
+      %tr#12330324.athing
+        %td.title{:align => "right", :valign => "top"}
+          %span.rank
+        %td.votelinks{:valign => "top"}
+          %center
+            %font{:color => "#ff6600"} *
+            %br/
+            =image_tag("s.gif", :style => "height:1;width:14px;")
+        %td.title
+          %a.storylink{:href => @post.url, :rel => "nofollow"} 
+            =@post.title
+          - if @post.domain.present?
+            %span.sitebit.comhead
+              (
+              %a{:href => @post.domain}>
+                %span.sitestr
+                  =@post.domain
+              )
+      %tr
+        %td{:colspan => "2"}
+        %td.subtext
+          %span#score_12330324.score
+            ="#{@post.points} points"
+          by
+          %a.hnuser{:href => edit_user_path} 
+            =current_user.username
+          %span.age
+            |
+            %a 
+              =time_ago_in_words(@post.created_at) + " ago"
+          %span#unv_12330324
+          |          
+          %a{:href => "https://www.google.com/search?q=#{CGI.escape(@post.title)}"} web
+          |
+          =link_to comment_display_string(@post), post_path(@post.url_title)
+    %br/
+    =form_tag(update_post_path(:post_id => @post.id.to_s), method: "put") do            
+      %table{:border => "0"}
+        %tr
+          %td{:valign => "top"} title:
+          %td
+            %input{:name => "title", :size => "60", :type => "text", :value => @post.title}/
+        - if @post.url.present?
+          %tr
+            %td{:valign => "top"} url:
+            %td
+              =@post.url
+        - else
+          %tr
+            %td{:valign => "top"} text:
+            %td
+              %textarea{:cols => "60", :name => "text", :rows => "6", :wrap => "virtual"}
+                =@post.text
+
+      %br/
+      %input{:type => "submit", :value => "update"}

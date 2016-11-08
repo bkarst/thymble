@@ -1,0 +1,2 @@
+- @comments.each do |comment|
+    =render :partial => 'post/comment', :locals => { :comment => comment, :nesting => 100, :render_post => true }

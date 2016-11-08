@@ -1,0 +1,108 @@
+%tr
+  %td
+    %table{:border => "0"}
+      %tr#12301996.athing
+        %td.title{:align => "right", :valign => "top"}
+          %span.rank
+        %td.votelinks{:valign => "top"}
+          %center
+            - if @post.user == current_user
+              %div{:class => 'submitted-asterik'}
+                * 
+            - else
+              - if current_user && current_user.upvoted_posts[@post.id.to_s].present?
+                %a#up_12303075{:class => 'upvote-post', "data-id" =>  @post.id.to_s, :style => 'visibility:hidden;'}
+                  .votearrow{:title => "upvote", "data-id" =>  @post.id.to_s}
+              - else
+                %a#up_12303075{:class => 'upvote-post', "data-id" =>  @post.id.to_s}
+                  .votearrow{:title => "upvote", "data-id" =>  @post.id.to_s}
+        %td.title
+          %a.storylink{:href => @post.link }
+            =@post.title
+          %span.sitebit.comhead
+            - if @post.domain.present?
+              (
+              %a{:href => root_path(from: @post.domain )}>
+                %span.sitestr
+                  =@post.domain
+              )
+      %tr
+        %td{:colspan => "2"}
+        %td.subtext
+          %span#score_12301996.score
+            ="#{@post.points} points"
+          by
+          %a.username-link{:href => show_user_path(CGI.escape(@post.user.username))}
+            =@post.user.username
+          |
+          %span.age
+            =time_ago_in_words(@post.created_at) + " ago"
+          %span#unv_12301996
+          - if current_user.present?
+            - if current_user.upvoted_posts[@post.id.to_s]
+              %span{:class => 'unupvote-post', "data-id" =>  @post.id.to_s} 
+                |
+                %a{"data-id" =>  @post.id.to_s}
+                  unvote
+            - else
+              %span{:class => 'unupvote-post', "data-id" =>  @post.id.to_s, :style => 'display:none;'}
+                |
+                %a{"data-id" =>  @post.id.to_s}
+                  unvote
+          |
+          - if current_user && current_user.flagged_posts[@post.id.to_s]
+            %a{:class => 'unflag-post', "data-id" =>  @post.id.to_s} unflag
+          - else
+            %a{:class => 'flag-post', "data-id" =>  @post.id.to_s} flag
+          |
+          %a{:href => "https://www.google.com/search?q=#{CGI.escape(@post.title)}", :target => '_blank'} web
+          |
+          - if current_user && current_user.saved_posts[@post.id.to_s]
+            %a{:class => 'unfavorite-post', "data-id" =>  @post.id.to_s} unfavorite
+          - else
+            %a{:class => 'favorite-post', "data-id" =>  @post.id.to_s} favorite
+          |
+          %a.share-facebook{href: "http://www.facebook.com/sharer/sharer.php?url=#{get_meta_url}", :style => 'color:#3b5998;', :target => '_blank'}
+            facebook
+          |
+          %a.share-twitter{href: 'http://twitter.com/share', :style => 'color:#00aced;', :target => '_blank'}
+            twitter
+        - if @post.text.present?
+          %tr{:style => "height:2px"}
+          %tr
+            %td{:colspan => "2"}
+            %td{:class => 'post-text-td'}
+              =@post.text
+      %tr{:style => "height:10px"}
+      %tr
+        %td{:colspan => "2"}
+        %td
+          =form_tag(create_comment_path(:post_id => @post.id.to_s, :comment_id => "none"), method: "post") do
+            %textarea{:cols => "60", :name => "comment[comment_text]", :rows => "6"}
+            %br/
+            %br/
+            - if current_user && current_user.created_at > 2.hours.ago
+              %span.subtext{:style => 'font-size: 9.5pt'}
+                If you haven't already, would you mind reading
+                about #{Constants::APP_NAME}'s
+                %a{:href => guidelines_path}
+                  %u approach to discussion.
+            %br/
+            %br/
+            %input{:type => "submit", :value => "add comment"}/    
+    .menuarea{:style => 'padding-left:14px;padding-bottom:10px;'}
+      =form_tag(post_path(@post.url_title), method: "get") do
+        %span.dropdown-title.lightdrop
+          sorted by:
+        %select{:class => 'comment-sort-select' }
+          %option{:value => 'newest', selected_string?('newest', @comment_order) => selected_string?('newest', @comment_order)}
+            newest
+          %option{:value => 'top', selected_string?('top', @comment_order) => selected_string?('top', @comment_order)}
+            top
+          %option{:value => 'oldest', selected_string?('oldest', @comment_order) => selected_string?('oldest', @comment_order)}
+            oldest
+    %table.comment-tree{:border => "0"}
+      - @post.order_comments_by(@comment_order).each do |comment|
+        =render 'comment',:comment => comment, :nesting => 100, :render_post => false
+    %br/
+    %br/   

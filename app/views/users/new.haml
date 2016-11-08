@@ -1,0 +1,48 @@
+!!!
+%html
+  %head
+    %meta{:content => "origin", :name => "referrer"}/
+    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
+  %body
+    - if flash[:error_message]
+      %p{:style => 'font-color:#00ffff;'}
+        =flash[:error_message]
+    %b Login
+    %br/    
+    %br/
+    =form_tag(create_session_path, method: "post") do
+      %input{:name => "goto", :type => "hidden", :value => "news"}/
+      %table{:border => "0"}
+        %tr
+          %td username:
+          %td
+            %input{:autocapitalize => "off", :autocorrect => "off", :autofocus => "true", :name => "user[username]", :size => "20", :spellcheck => "false", :type => "text"}/
+        %tr
+          %td password:
+          %td
+            %input{:name => "user[password]", :size => "20", :type => "password"}/
+      %br/
+      %input{:type => "submit", :value => "login"}/
+    %a{:href => "forgot?id="} Forgot your password?
+    %br/
+    %br/
+    %b Create Account
+    %br/
+    %br/
+    =form_tag(create_user_path, method: "post") do      
+      %input{:name => "creating", :type => "hidden", :value => "t"}/
+      %table{:border => "0"}
+        %tr
+          %td *username:
+          %td
+            %input{:autocapitalize => "off", :autocorrect => "off", :name => "user[username]", :size => "20", :spellcheck => "false", :type => "text"}/        
+        %tr
+          %td *password:
+          %td
+            %input{:name => "user[password]", :size => "20", :type => "password"}/
+        %tr
+          %td email:
+          %td
+            %input{:autocapitalize => "off", :autocorrect => "off", :name => "user[email]", :size => "20", :spellcheck => "false", :type => "text"}/
+      %br/
+      %input{:type => "submit", :value => "create account"}/
